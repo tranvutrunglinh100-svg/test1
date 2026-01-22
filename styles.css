@@ -1,0 +1,120 @@
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#eee;
+  font-family:system-ui,sans-serif;
+}
+
+canvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+
+.phone{
+  max-width:420px;
+  margin:auto;
+  padding:20px 0;
+}
+
+.card{
+  background:#fff;
+  border-radius:18px;
+  overflow:hidden;
+}
+
+.photo{width:100%}
+
+.names{
+  text-align:center;
+  font-family:'Great Vibes',cursive;
+  font-size:36px;
+  margin-top:-40px;
+  background:rgba(255,255,255,.9);
+}
+
+.names span{color:#c0392b}
+
+.date{
+  text-align:center;
+  color:#b33939;
+  font-weight:bold;
+}
+
+.blessings{
+  position:absolute;
+  bottom:120px;
+  width:100%;
+  padding:10px;
+}
+
+.bubble{
+  background:rgba(255,220,220,.85);
+  padding:8px 12px;
+  border-radius:16px;
+  font-size:14px;
+  margin-bottom:6px;
+  animation:floatUp 6s linear forwards;
+}
+
+@keyframes floatUp{
+  from{transform:translateY(40px);opacity:0}
+  to{transform:translateY(-120px);opacity:1}
+}
+
+.wish-btn,.qr-btn{
+  width:90%;
+  margin:8px auto;
+  display:block;
+  padding:12px;
+  border:none;
+  border-radius:999px;
+  font-weight:bold;
+  color:#fff;
+}
+
+.wish-btn{background:#c0392b}
+.qr-btn{background:#8e44ad}
+
+.music-btn{
+  position:fixed;
+  top:20px;
+  right:20px;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  border:none;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.4);
+  display:none;
+  place-items:center;
+}
+
+.modal-box{
+  background:#fff;
+  padding:16px;
+  width:90%;
+  max-width:320px;
+  border-radius:12px;
+  text-align:center;
+  position:relative;
+}
+
+.modal-box input,
+.modal-box textarea{
+  width:100%;
+  margin:6px 0;
+  padding:8px;
+}
+
+.close{
+  position:absolute;
+  top:8px;
+  right:12px;
+  font-size:22px;
+  cursor:pointer;
+}

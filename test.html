@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dương Hoa Wedding</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&family=Roboto:wght@300;400&display=swap');
+        
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 0; font-family: 'Roboto', sans-serif; background: #fdf2f8; color: #4a148c; overflow-x: hidden; }
+        
+        /* Buộc trang hiển thị đúng kích thước điện thoại - hẹp, đầy màn hình */
+        .wrapper { width: 100vw; max-width: 100%; margin: 0; padding: 0; }
+        .container { width: 100%; margin: 0 auto; background: rgba(255,255,255,0.95); min-height: 100vh; padding-bottom: 80px; }
+        
+        /* Màn hình mở thiệp */
+        .envelope-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #f8bbd0 url('https://img.freepik.com/premium-vector/rose-floral-watercolor-wedding-invitation-set-card-template-design-with-pink-watercolor-background-bouquet_218303-83.jpg') center/cover; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 200; transition: transform 1.5s ease; }
+        .envelope-screen.open { transform: translateY(-100%); }
+        .envelope { width: 75vw; max-width: 280px; height: auto; background: white; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); position: relative; cursor: pointer; animation: float 3s infinite ease-in-out; }
+        .envelope img { width: 100%; height: auto; border-radius: 20px; }
+        .tap-text { margin-top: 40px; color: white; font-size: 18px; animation: blink 1.5s infinite; }
+        
+        @keyframes float { 0% { transform: translateY(0); } 50% { transform: translateY(-12px); } 100% { transform: translateY(0); } }
+        @keyframes blink { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        
+        /* Header */
+        .header { height: 100vh; width: 100vw; position: relative; margin: 0; }
+        .header img { width: 100%; height: 100%; object-fit: cover; }
+        .header-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 280px; background: linear-gradient(transparent, rgba(253,242,248,0.95)); }
+        .header-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #c2185b; text-shadow: 1px 1px 3px white; width: 90%; }
+        .header-text h1 { font-family: 'Great Vibes', cursive; font-size: 38px; margin: 0; }
+        .header-text p { font-size: 20px; margin: 8px 0; }
+        
+        /* Pause icon */
+        .pause-icon { position: fixed; top: 12px; right: 12px; z-index: 100; cursor: pointer; display: none; }
+        .pause-icon.show { display: block; }
+        .pause-icon img { width: 32px; background: rgba(255,255,255,0.8); border-radius: 50%; padding: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        
+        /* Section animation */
+        .section { padding: 25px 12px; text-align: center; opacity: 0; transition: opacity 1s ease, transform 1s ease; }
+        .section.visible { opacity: 1; transform: translateY(0); }
+        .section.fade { transform: translateY(30px); }
+        
+        h2 { font-family: 'Great Vibes', cursive; font-size: 34px; color: #e91e63; margin-bottom: 20px; }
+        
+        /* Countdown */
+        .countdown { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
+        .countdown div { background: #e91e63; color: white; padding: 8px 5px; border-radius: 8px; min-width: 55px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .countdown span { font-size: 26px; display: block; font-weight: bold; }
+        .countdown label { font-size: 11px; }
+        
+        /* Wishes */
+        .wish-bubble { background: #f8bbd0; padding: 12px 18px; margin: 12px 25px; border-radius: 25px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.1); font-size: 14px; }
+        .wish-bubble::after { content: ''; position: absolute; bottom: -10px; left: 40px; border: 10px solid transparent; border-top-color: #f8bbd0; }
+        
+        /* Calendar */
+        .calendar { background: #fce4ec; padding: 18px; border-radius: 20px; margin: 12px; }
+        .calendar h2 { font-size: 32px; }
+        .calendar table { width: 100%; border-collapse: collapse; }
+        .calendar td { padding: 6px; font-size: 14px; }
+        .calendar .marked { background: #e91e63; color: white; border-radius: 50%; padding: 8px; font-weight: bold; }
+        
+        /* Album */
+        .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px; }
+        .gallery img { width: 100%; border-radius: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); cursor: pointer; }
+        
+        /* Phần Gửi quà + RSVP */
+        .gift-rsvp-section { padding: 25px 12px; background: #fce4ec; border-radius: 20px; margin: 12px; text-align: center; }
+        .gift-rsvp-section h2 { font-size: 32px; }
+        .gift-box { width: 100px; margin: 15px auto; cursor: pointer; }
+        .gift-box img { width: 100%; }
+        .gift-touch { font-size: 14px; color: #e91e63; margin: 12px 0; }
+        .rsvp-btn { background: #e91e63; color: white; padding: 8px 20px; border-radius: 30px; cursor: pointer; display: inline-block; margin-top: 10px; font-size: 14px; }
+        
+        /* RSVP popup */
+        .rsvp-popup-new { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 102; width: 90%; max-width: 310px; text-align: left; }
+        .rsvp-popup-new.show { display: block; }
+        .rsvp-popup-new h3 { text-align: center; color: #e91e63; margin-bottom: 15px; font-size: 17px; }
+        .rsvp-popup-new input, .rsvp-popup-new select { width: 100%; padding: 10px; margin: 8px 0; border-radius: 10px; border: 1px solid #e91e63; font-size: 14px; }
+        .rsvp-popup-new .radio-group { margin: 10px 0; }
+        .rsvp-popup-new label { display: block; margin: 8px 0; font-size: 13px; }
+        .rsvp-popup-new button { background: #e91e63; color: white; padding: 12px; border: none; border-radius: 30px; width: 100%; font-size: 15px; cursor: pointer; }
+        
+        /* Bottom bar - icon siêu nhỏ, sát hai bên */
+        .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.6); backdrop-filter: blur(12px); display: flex; justify-content: space-around; align-items: center; padding: 8px 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 100; }
+        .bottom-bar .toggle-btn { cursor: pointer; }
+        .bottom-bar .toggle-btn img { width: 22px; filter: invert(72%) sepia(44%) saturate(3838%) hue-rotate(298deg) brightness(94%) contrast(101%); }
+        .bottom-bar .menu-icons { display: flex; justify-content: space-around; width: 85%; transition: opacity 0.3s; }
+        .bottom-bar.hidden .menu-icons { opacity: 0; pointer-events: none; }
+        .bottom-bar .menu-icons div { cursor: pointer; }
+        .bottom-bar .menu-icons img { width: 22px; filter: invert(72%) sepia(44%) saturate(3838%) hue-rotate(298deg) brightness(94%) contrast(101%); }
+        
+        /* QR popup */
+        .qr-popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 102; text-align: center; width: 90%; max-width: 310px; }
+        .qr-popup.show { display: block; }
+        .qr-popup img { width: 130px; margin: 10px 0; border-radius: 15px; }
+        
+        /* Lightbox */
+        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 101; justify-content: center; align-items: center; }
+        .lightbox.show { display: flex; }
+        .lightbox img { max-width: 95%; max-height: 95%; border-radius: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="container">
+            <!-- Màn hình mở thiệp -->
+            <div class="envelope-screen" id="envelopeScreen" onclick="openInvitation()">
+                <div class="envelope">
+                    <img src="https://cdn.dribbble.com/userupload/24436328/file/original-27ab09c1bd257350c9b2edbe925957f6.gif" alt="Mở thiệp">
+                </div>
+                <p class="tap-text">Chạm để mở thiệp mời</p>
+            </div>
+
+            <!-- Header -->
+            <div class="header">
+                <img src="https://cdn.nicolebridal.vn/wp-content/uploads/2022/08/vay-cuoi-co-dau-mai-tinh.png" alt="Cặp đôi">
+                <div class="header-overlay"></div>
+                <div class="header-text">
+                    <h1>Dương Hoa Wedding</h1>
+                    <p>Xuân Dương & Thanh Hoa</p>
+                    <p>Chúng Tôi Sắp Nên Duyên Vợ Chồng</p>
+                </div>
+            </div>
+
+            <!-- Lời chúc -->
+            <div class="section fade">
+                <div class="wishes">
+                    <div class="wish-bubble">Chúc hai bạn trăm năm hạnh phúc! ❤️</div>
+                    <div class="wish-bubble">Mãi mãi bên nhau nhé!</div>
+                    <div class="wish-bubble">Happy Wedding! 🎉</div>
+                    <div class="wish-bubble">Chúc mừng ngày trọng đại!</div>
+                    <div class="wish-bubble">Yêu thương mãi mãi!</div>
+                </div>
+            </div>
+
+            <!-- Countdown -->
+            <div class="section fade">
+                <h2>Đếm Ngược Ngày Vui</h2>
+                <div class="countdown" id="countdown">
+                    <div><span id="days">00</span><br><label>Ngày</label></div>
+                    <div><span id="hours">00</span><br><label>Giờ</label></div>
+                    <div><span id="minutes">00</span><br><label>Phút</label></div>
+                    <div><span id="seconds">00</span><br><label>Giây</label></div>
+                </div>
+            </div>
+
+            <!-- Lịch cưới -->
+            <div class="section fade">
+                <div class="calendar">
+                    <h2>Lịch Cưới</h2>
+                    <table>
+                        <tr><th>T2</th><th>T3</th><th>T4</th><th>T5</th><th>T6</th><th>T7</th><th>CN</th></tr>
+                        <tr><td></td><td></td><td></td><td>1</td><td>2</td><td>3</td><td>4</td></tr>
+                        <tr><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td></tr>
+                        <tr><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td></tr>
+                        <tr><td>19</td><td>20</td><td>21</td><td>22</td><td class="marked">23</td><td>24</td><td>25</td></tr>
+                        <tr><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td></td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Album -->
+            <div class="section fade">
+                <h2>Album Kỷ Niệm</h2>
+                <div class="gallery">
+                    <img src="https://danielledefayette.com/wp-content/uploads/2023/08/Great-Marsh-Estate-Modern-Vietnamese-Wedding-Traditions_0009-1024x721.jpg" alt="1">
+                    <img src="https://www.linandjirsa.com/wp-content/uploads/Vietnamese-Wedding-Traditions-3.jpg" alt="2">
+                    <img src="https://danielledefayette.com/wp-content/uploads/2023/08/Great-Marsh-Estate-Modern-Vietnamese-Wedding-Traditions_0014-1024x766.jpg" alt="3">
+                    <img src="https://greenweddingshoes.com/wp-content/uploads/2021/01/08-Monochrome-Vietnam-MicroWedding.jpg" alt="4">
+                    <img src="https://www.linandjirsa.com/wp-content/uploads/Ao-Dai-Vietnamese-Wedding-Traditions.jpg" alt="5">
+                    <img src="https://autourasia.com/files/thumb/800/535/uploads/Useful-infos/vietnamese-wedding/572-avt-vnese-wedding.jpg" alt="6">
+                </div>
+            </div>
+
+            <!-- Phần Gửi quà + RSVP -->
+            <div class="section fade gift-rsvp-section">
+                <h2>Gửi Quà Mừng Cưới Tới Cô Dâu - Chú Rể</h2>
+                <div class="gift-box" onclick="openQR()">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Hộp quà">
+                </div>
+                <p class="gift-touch">(Chạm vào hộp quà)</p>
+                <div class="rsvp-btn" onclick="openRSVPNew()">Xác Nhận Tham Dự</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="bottom-bar" id="bottomBar">
+        <div class="toggle-btn" onclick="toggleMenu()">
+            <img id="toggleIcon" src="https://cdn-icons-png.flaticon.com/512/748/748066.png" alt="Ẩn">
+        </div>
+        <div class="menu-icons" id="menuIcons">
+            <div onclick="toggleMusic()"><img src="https://cdn-icons-png.flaticon.com/512/727/727218.png" alt="Nhạc"></div>
+            <div onclick="openQR()"><img src="https://cdn-icons-png.flaticon.com/512/6067/6067663.png" alt="Tặng Quà"></div>
+            <div onclick="openRSVPNew()"><img src="https://cdn-icons-png.flaticon.com/512/1828/1828404.png" alt="Tham Dự"></div>
+        </div>
+    </div>
+
+    <!-- Pause icon -->
+    <div class="pause-icon" id="pauseBtn">
+        <img src="https://cdn-icons-png.flaticon.com/512/727/727245.png" onclick="toggleScroll()">
+    </div>
+
+    <!-- QR popup -->
+    <div class="qr-popup" id="qrPopup">
+        <h2>Hộp Quà Yêu Thương</h2>
+        <h3>Cô Dâu</h3>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=STK:123456789 - Thanh Hoa" alt="QR Cô Dâu">
+        <h3>Chú Rể</h3>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=STK:987654321 - Xuân Dương" alt="QR Chú Rể">
+        <button onclick="closeQR()" style="margin-top:20px;padding:10px;background:#e91e63;color:white;border:none;border-radius:20px;">Đóng</button>
+    </div>
+
+    <!-- RSVP popup mới -->
+    <div class="rsvp-popup-new" id="rsvpPopupNew">
+        <h3>Xác nhận tham dự</h3>
+        <label>Họ và tên</label>
+        <input type="text" placeholder="Nhập tên của bạn">
+        
+        <label>Bạn sẽ tham dự chứ?</label>
+        <div class="radio-group">
+            <label><input type="radio" name="attend" value="yes" checked> Có, tôi sẽ tham dự</label>
+            <label><input type="radio" name="attend" value="no"> Tôi bận, rất tiếc không thể tham dự</label>
+        </div>
+        
+        <label>Bạn là khách của</label>
+        <select>
+            <option>Nhà trai</option>
+            <option>Nhà gái</option>
+            <option>Cả hai</option>
+        </select>
+        
+        <button onclick="sendRSVPNew()">Gửi xác nhận</button>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <img id="lightboxImg" src="">
+    </div>
+
+    <!-- Music -->
+    <audio id="music" loop>
+        <source src="https://www.chosic.com/wp-content/uploads/2022/07/Scott-Buckley-Moonlight.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Mở thiệp
+        function openInvitation() {
+            document.getElementById('envelopeScreen').classList.add('open');
+            setTimeout(() => {
+                document.getElementById('envelopeScreen').style.display = 'none';
+                music.play();
+                autoScroll();
+            }, 1500);
+        }
+
+        // Auto scroll
+        let scrolling = true;
+        function autoScroll() {
+            if (scrolling) window.scrollBy(0, 1.5);
+            requestAnimationFrame(autoScroll);
+        }
+
+        window.addEventListener('wheel', () => {
+            scrolling = false;
+            document.getElementById('pauseBtn').classList.add('show');
+        });
+
+        function toggleScroll() {
+            scrolling = !scrolling;
+        }
+
+        // Animation
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => entry.isIntersecting && entry.target.classList.add('visible'));
+        });
+        document.querySelectorAll('.section').forEach(sec => observer.observe(sec));
+
+        // Lightbox
+        document.querySelectorAll('.gallery img').forEach(img => {
+            img.onclick = () => {
+                document.getElementById('lightboxImg').src = img.src;
+                document.getElementById('lightbox').classList.add('show');
+            };
+        });
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('show'); }
+
+        // Music
+        const music = document.getElementById('music');
+        function toggleMusic() { music.paused ? music.play() : music.pause(); }
+
+        // QR
+        function openQR() { document.getElementById('qrPopup').classList.add('show'); }
+        function closeQR() { document.getElementById('qrPopup').classList.remove('show'); }
+
+        // RSVP
+        function openRSVPNew() { document.getElementById('rsvpPopupNew').classList.add('show'); }
+        function sendRSVPNew() {
+            alert('Cảm ơn quý vị đã xác nhận!');
+            document.getElementById('rsvpPopupNew').classList.remove('show');
+        }
+
+        // Toggle menu
+        let menuHidden = false;
+        function toggleMenu() {
+            menuHidden = !menuHidden;
+            const icons = document.getElementById('menuIcons');
+            const toggleIcon = document.getElementById('toggleIcon');
+            if (menuHidden) {
+                icons.style.opacity = '0';
+                toggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/56/56805.png'; // 3 gạch
+            } else {
+                icons.style.opacity = '1';
+                toggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/748/748066.png'; // X
+            }
+        }
+
+        // Countdown
+        const weddingDate = new Date("2026-01-23").getTime();
+        setInterval(() => {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+            document.getElementById("days").innerText = Math.floor(distance / (1000*60*60*24));
+            document.getElementById("hours").innerText = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
+            document.getElementById("minutes").innerText = Math.floor((distance % (1000*60*60)) / (1000*60));
+            document.getElementById("seconds").innerText = Math.floor((distance % (1000*60)) / 1000);
+        }, 1000);
+    </script>
+</body>
+</html>
